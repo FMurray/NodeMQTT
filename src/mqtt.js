@@ -1,4 +1,4 @@
-import react,{useState,useEffect} from 'react';
+import react,{useState,useEffect, useCallback} from 'react';
 import mqtt from 'precompiled-mqtt';
 
 export default function Mqtt() {
@@ -6,8 +6,10 @@ export default function Mqtt() {
     const[message,setMessage] = useState('');
     const[subscribedToTopics,setSubscribedToTopics] = useState(false);
     const topics=['temp/current','huimidity/current']
-useEffect(()=>{
+
     const client = mqtt.connect('mqtt://192.168.1.146:9001');
+
+useEffect(()=>{
     client.on('connect',  ()=> {
         setConnectionStatus(true);
         client.subscribe(topics,()=>{
@@ -16,10 +18,11 @@ useEffect(()=>{
         client.publish('Clients', 'Node App Connected');
         client.on("message", (topic, message)=> {
             setMessage([`${topic} : `,message.toString()]);
+            console.log(message)
         });
     })
     
-},[message])
+},[])
 
 return(
     <div className='MQTT Container'>
