@@ -1,38 +1,26 @@
 version: "3"
 services:
-  hub-broker:
+  broker:
     image: eclipse-mosquitto
     volumes:
       - "./hub/mosquitto:/mosquitto"
     networks:
       - localnet
     ports:
-      - "1883:1883"
-  hub-server:
-    image: hub-server
-    depends_on:
-      - hub-broker
-    build:
-      dockerfile: Dockerfile
-      context: ./hub/server
-    user: "0"
-    networks:
-      - localnet
-    ports:
-      - "8000:8000"
+      - "${MQTT_BROKER_PORT}:${MQTT_BROKER_PORT}"
   ui:
     stdin_open: true
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - NODE_ENV=development
-      - FAST_REFRESH=false
+    depends_on:
+      - broker
     build: ./ui
     volumes:
       - /app/node_modules
       - ./ui:/app
     command: npm start
+    networks:
+      - localnet
     ports: 
-      - "3000:3000"
-      - "35729:35729"
+      - "${REACT_DEV_SERVER_PORT}:${REACT_DEV_SERVER_PORT}"
+      - "${REACT_DEV_SERVER_LIVE_RELOAD_PORT}:${REACT_DEV_SERVER_LIVE_RELOAD_PORT}"
 networks:
   localnet:
