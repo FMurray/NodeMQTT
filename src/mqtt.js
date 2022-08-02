@@ -2,7 +2,7 @@ import react, { useState, useEffect, useCallback } from "react";
 import mqtt from "precompiled-mqtt";
 
 export default function Mqtt() {
-  const connectionString = "mqtt://192.168.1.146:9001";
+  const connectionString = "mqtt://192.xxx.xx.xx";
   const [connectionStatus, setConnectionStatus] = useState(false);
   const [temp, setTemp] = useState("");
   const [humidity, setHumidity] = useState("");
