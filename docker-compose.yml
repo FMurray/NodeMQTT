@@ -3,7 +3,7 @@ services:
   broker:
     image: eclipse-mosquitto
     volumes:
-      - "./hub/mosquitto:/mosquitto"
+      - "./broker/mosquitto:/mosquitto"
     networks:
       - localnet
     ports:
@@ -16,6 +16,10 @@ services:
     volumes:
       - /app/node_modules
       - ./ui:/app
+    environment: 
+      - NODE_ENV
+      - CHOKIDAR_USEPOLLING
+      - FAST_REFRESH
     command: npm start
     networks:
       - localnet

@@ -1,26 +1,12 @@
-import React,{useState} from "react";
-import MqttDisplay  from './mqtt'
-import ToggleSwitch from './UI Components/ToggleSwitch'
- function App() {
+import React from "react";
+import { Home } from './pages'
 
-    //////Light Switch/////
-    const [LightIsOn, setLightIsOn] = useState(false);
-
-    const handleLightToggle = () => {
-        setLightIsOn(!LightIsOn);
-      };
-
+function App() {
 
     return (
         <div className="App">
+            <Home></Home>
             <h1>Mqtt App</h1>
-            <MqttDisplay />
-            <p>Light</p>
-            <ToggleSwitch 
-            isOn={LightIsOn}
-            handleToggle={handleLightToggle}
-            onColor="#17b306"
-            item="Light"/>
         </div>
     );
 }
