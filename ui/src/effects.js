@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import mqtt from "precompiled-mqtt"
+import { CONSTANTS } from "./constants";
 
-export const useMqttClient = (connConfig) => {
+export const useMqttClient = () => {
 
     const [client, setClient] = useState(null);
     // const [payload, setPayload] = useState({});
     const [connectStatus, setConnectStatus] = useState('Connect');
 
-    const mqttConnect = (connConfig, mqttOption) => {
-        const hostname = connConfig.hostname || "localhost";
-        const port = connConfig.port || 1883;
+    const mqttConnect = (mqttOption) => {
         setConnectStatus('Connecting...');
-        setClient(mqtt.connect(`ws://${hostname}:${port}`, mqttOption));
+        setClient(mqtt.connect(`${CONSTANTS['BROKER_URL']}`, mqttOption));
     };
 
     useEffect(() => {
@@ -30,10 +29,27 @@ export const useMqttClient = (connConfig) => {
             //     const payload = { topic, message: message.toString() };
             //     setPayload(payload);
             // });
-        } else if (connConfig) {
-            mqttConnect(connConfig, {});
+        } else {
+            mqttConnect({});
         }
     });
 
-    return connectStatus
+    return client
+}
+
+export const useMqttMessages = () => {
+    const client = useMqttClient();
+    const [payload, setPayload] = useState(null)
+
+    useEffect(() => {
+        if (client) {
+            client.on('message', (topic, message) => {
+                console.log('message: ', topic, message.toString());
+                const payload = { topic, message: message.toString() };
+                setPayload(payload);
+            });
+        }
+    })
+
+    return payload
 }

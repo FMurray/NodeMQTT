@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Switch, MqttDisplay } from '../components'
-import { useMqttClient } from "../effects";
+import { useMqttClient, useMqttMessages } from "../effects";
 
 export const Home = () => {
 
@@ -12,12 +12,13 @@ export const Home = () => {
 
     // connection 
     const connConfig = { hostname: "localhost", port: 1883 };
-    const connStatus = useMqttClient(connConfig);
+    const client = useMqttClient();
+    const messages = useMqttMessages();
 
     return (
         <div className="Home">
             <h1>Home</h1>
-            <MqttDisplay connStatus={connStatus}/>
+            <MqttDisplay connStatus={client ? 'Connected' : 'Not Connected'}/>
             <Switch 
             isOn={LightIsOn}
             handleToggle={handleLightToggle}
